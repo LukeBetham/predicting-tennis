@@ -16,7 +16,7 @@ My goals for this project were:
 ## The Data
 For my project I will mainly be using data extracted from a docker container (https://github.com/mcekovic/tennis-crystal-ball/issues/337) - which was created opn the back of a large open source atp data repository from github = https://github.com/JeffSackmann/tennis_atp
 
-I checked that this data was valid by cross referencing a number of stats between this database and the offcial ATP website, and everything I checked matched up. I will be using the last 30 years of data, as this is when the ATP started recording detailed match data, and so before this the information isnt as good.
+I checked that this data was valid by cross referencing a number of stats between this database and the offcial ATP website, and everything I checked matched up. I will be using the last 30 years of data, as this is when the ATP started recording detailed match data, and so before this the information isnt as good. See below for visual representation of the usable matches. I only used data from 1991 as this is when the detailed data started.
 
 In addition to this I have sourced some data files which include the betting odds for the last 20 years in order to check how my model measures up. I got this info from http://www.tennis-data.co.uk/alldata.php
 
@@ -29,6 +29,9 @@ Some issues I ran into in the data collection stage:
 
 ## EDA
 Before starting on the modeling I did some analysis of the data to see if any specific patterns emerged
+![](images/age.png)
+![](images/gamestyle.png)
+![](images/matches2019_2.gif)
 
 ## Predictive Models and Evaluation
 
