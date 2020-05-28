@@ -24,7 +24,7 @@ Some issues I ran into in the data collection stage:
 - Docker Dependencies - as the docker image was built to serve the ultimate tennis website, the sql database downloaded from the docker image had a number of dependencies which meant I had to manually review the raw sql file and remove all dependencies before I could load the database. 
 - WTA Data incomplete - I was not able to get the same quality and range of data for women's tennis as men's tennis and so unfortunately for the time being I only focused on the data for men's tennis. I will adapt for another project in the future!
 - Commonality Issues: There were no data fields in common which could link the betting odds data to exact matches and so I had to do some feature engineering to link the odds to any given match.  
-
+![](images/data_not_full.png)
 
 
 ## EDA
