@@ -2,7 +2,7 @@
 ### General Assembly Capstone Project
 
 How accurately can you predict who will win a tennis match given past data? 
-In this project I use data from 30 years of tennis and around 75,000 professional individual matches to predict who is the likely winner of any given tennis match. 
+In this project I use data from 30 years of tennis and around 75,000 professional matches to predict who is the likely winner of any given tennis match. 
 
 ## Goals
 My goals for this project were:
