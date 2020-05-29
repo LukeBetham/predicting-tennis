@@ -69,14 +69,28 @@ One of the main challeges of this project was that I wanted the prediction of th
 Running the initial logistic regression with standard parameters for my symmetric model was ok to run on my laptop, but the parametrisation gridsearch promised to take over 2 days on my poor little dual core computer. So I decided to farm out the gridsearching to a more capabale AWS Machine Learning EC2 instance. See my blog at https://elasticvignette.wordpress.com/ for more details on this. 
 
 ### Machine Learning Class for Classification
-During this project, I wanted to simplify the task of running the main classification models for any given dataset since I was constantly adding features and wanting to re-run all models to see how they fared. In order to help speed up this process I created a class which given a set of features and a target will run preprocessing steps (standardisation and train-test split) and then simply run a large selection of the scikit learn classification models. In addition to this I added time saving functions to run gridsearches, confusion matrices and ROC curves. The code is in this project, but for a clean version of this class and a demo on how it works, please see my seperate repo on this 
+During this project, I wanted to simplify the task of running the main classification models for any given dataset since I was constantly adding features and wanting to re-run all models to see how they fared. In order to help speed up this process I created a class which given a set of features and a target will run preprocessing steps (standardisation and train-test split) and then simply run a large selection of the scikit learn classification models. In addition to this I added time saving functions to run gridsearches, confusion matrices and ROC curves. The code is in this project, but for a clean version of this class and a demo on how it works, please see my seperate repo on this: https://github.com/LukeBetham/machine-learning-classes
+
+### Principal Component Analysis (PCA)
+As mentionned above, some of my gridsearches were taking quite a long time to run and so I looked to reduce dimensionality. I thought this might be effective since I did have some collinearity in my features as I mentionned above. Some of the features contained parts of the same information and so I thought they might lend themselves well to dimensionality reduction. 
 
 ### Modelling Results
-
-
-
+- True Baseline: 50%
+- Target Baseline (choosing the rank favorite): 63.9%
+- Best Model CV Score: 67.95%
+Based on this, I was able to improve dramatically on the true baseline and substantially on the target baseline. In addition I ran the model 1000 times with resampled observations and got the below spread of CV scores, which returned a single value t-test value of the model versus target baseline of 0, meaning that we can reject the null hypothesis that the model score has a similar mean to the baseline score. See visual representation of the models run below (purple vertical lines 99% confidence and green vertical line is baseline).
+![](images/Frequentist.png)
 
 ## Odds Comparison
+As part of my project I decided to compare my best model to the bookmaker odds and look at potential return on investments (ROI's) for different betting strategies around the final model. I was not able to beat the accuracy of the bookmakers as the bookmakers choose the correct favorite 70.2% of the time, so about 2.2% more accurate than my model. However I wanted to see what this would mean in terms of ROI given different betting methods. See below a rundown of all the strategies and ROIs I tested:
+- Betting Randomly: -4.2% ROI. The worst strategy, over time you lose 4.2% of your investment if you select your player completely randomly.
+- Highest Rank: -2.7% ROI. Betting on the player with the highest rank.
+- Tightest Odds: -0.8% ROI. Betting on the bookies favorite each time will reduce the losses substantially. 
+- Not Betting: 0% ROI. This sounds like a joke, but in reality knowing when not to bet can be important, you don't need to bet systematically on every match, you can choose to bet on the matches where you are more certain. This strategy is a good one!
+- Model, Every Match: -3.31% ROI. If you systematically bet on every single match based on the models classification of the winner, you will be doing better than random, but still a pretty poor ROI!
+- Model, Blended: -2.4% ROI. Here the size of your bet is dependent on how sure the model is that the player will win (i.e. if the model assigns 50-50 probability, the bet is £0, if the probability is 100% then the bet is £10). This does slightly better than the systematic approach, but still makes a decent loss.
+- Model, 75% confidence: 0.37% ROI. This is the best strategy I tested and would mean a positive ROI over time! Here you only bet when the model is more than 75% confident that player will be the winner. 
+![](images/gambling.png)
 
 ## Further Analysis
 
