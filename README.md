@@ -1,4 +1,4 @@
-# Predicting Tennis - Modeling Match Outcomes with Machine Learning
+# Predicting Tennis - Modeling Outcomes with Machine Learning
 ### General Assembly Capstone Project
 
 How accurately can you predict who will win a tennis match given past data? 
@@ -24,22 +24,66 @@ Some issues I ran into in the data collection stage:
 - Docker Dependencies - as the docker image was built to serve the ultimate tennis website, the sql database downloaded from the docker image had a number of dependencies which meant I had to manually review the raw sql file and remove all dependencies before I could load the database. 
 - WTA Data incomplete - I was not able to get the same quality and range of data for women's tennis as men's tennis and so unfortunately for the time being I only focused on the data for men's tennis. I will adapt for another project in the future!
 - Commonality Issues: There were no data fields in common which could link the betting odds data to exact matches and so I had to do some feature engineering to link the odds to any given match.  
+
 ![](images/data_not_full.png)
 
 
 ## EDA
-Before starting on the modeling I did some analysis of the data to see if any specific patterns emerged
+Before starting on the modeling some analysis and visualisation of the data to give an idea of what feature engineering would be useful. Have included a few examples of variables I looked at for example.
+
+### Age
+Age looked like it would be an important determinant as generally the win ratio peaks in the mid 20s. This led me to create some features around age and experience (amount of years since first professional match).
 ![](images/age.png)
+
+### Gamestyle over time
+I wanted to see if the playstyle of winners changed over time - for instance below you can see that the number of aces have increased over time. I created a lot of features around strength of 1st and 2nd serve, strength of return and other play style statistics, and since I was not looking at time-series in this project I wanted to make sure that the model would generalise well to the whole time period (which based on the below chart isn't necesarrily the case).
 ![](images/gamestyle.png)
+
+### Networks (who is playing and beating who)
+I wanted to create features around the amount of time each player has played each other in the past and also which players each player has played in common, which would help to give more accurate predictions for players who had never played before. I used networkx to map out which players were playing each other. In the below gif you can see ordered visual of which of the top tennis players played each other in 2019, with a new colour for each month. 
 ![](images/matches2019_2.gif)
 
 ## Predictive Models and Evaluation
+### Features used
+- 4 player based features: Rank, ELO rating, Age, Height
+- 32 previous season features: Surface wins and losses, serve, return and pressure points (tiebreaks) from the previous season
+- 22 all time stats: Same as previous season, but with all data from before current match (some collinearity here as all time includes previous season - but I wanted to give additional weight to the previous season)
+- 4 versus stats: Head to head features based on previous matches between the two players in the match predicted.
+
+### Modelling issues
+ - Missing data: Some features that I wanted I was not able to collect (e.g. serve speed, injuries, specific shot accuracy, play styles like serve and volley attempts).
+ - Data Quality: Some of the features I was using had missing data
+ 	- Match stats: tried both inputing 0 and removing data for modelling (28.7%)
+ 	- Rank: inputed lowest possible rank (2%)
+ 	- Age: Removed missing age (0.3%)
+ 	- Height: inputed average (12.5%)
+ - Model Reliability and Symmetry: This is where I spent a lot of the modelling time - making sure that the models were "reversible", see next section. 
+
+### Modelling with Pairwise Features
+One of the main challeges of this project was that I wanted the prediction of the model to be the same no matter which way you input the players (i.e. player1 v.s. player2 = player2 v.s. player1, all else equal). This presents a challenge since some models are not built to allow for this. Decision trees, for instance, are not symmetric, and the classification could be completely different depending who is in the player1 spot. In order to deal with this issue, I worked on a few different model types which could deal with this:
+- Symmetric Model: All features are player1-player2, meaning that you will have the same feature no matter which player is put in first, just the sign will be flipped. I then use a logistic regression model with no y intercept so that the model is fully reversible. This is the model that worked the best in the end. 
+- Pseudo-Symmetric Model: Features are not differences, but all observations are duplicated and flipped, and the weight of each datapoint is reduced to 50%. This means that the model trains on player1 being on the left and also on player2 being on the left hand side for the same match, meaning that the model will end up not creating lopsided models (e.g. weighted decision trees). This model is flawed in that it duplicates the data and therefore massively increases the training time, and was not perfectly symmetric. It did, however, allow me to run more models than just logistic regression.
+- Non-Symmetric Model: Here I decided to create a model for one tennis player (Nadal) and see if that tennis player was likely to win any given match (which could then be expanded to train on any given tennis player). So here I used only matches in which Nadal played and Nadal was always on the right hand side. The issue here is that, even though Nadal is prolific, there were not enough observations for the model to find any improvements on baseline, and so this was the weakest approach. 
+
+### Using AWS for gridsearch
+Running the initial logistic regression with standard parameters for my symmetric model was ok to run on my laptop, but the parametrisation gridsearch promised to take over 2 days on my poor little dual core computer. So I decided to farm out the gridsearching to a more capabale AWS Machine Learning EC2 instance. See my blog at https://elasticvignette.wordpress.com/ for more details on this. 
+
+### Machine Learning Class for Classification
+During this project, I wanted to simplify the task of running the main classification models for any given dataset since I was constantly adding features and wanting to re-run all models to see how they fared. In order to help speed up this process I created a class which given a set of features and a target will run preprocessing steps (standardisation and train-test split) and then simply run a large selection of the scikit learn classification models. In addition to this I added time saving functions to run gridsearches, confusion matrices and ROC curves. The code is in this project, but for a clean version of this class and a demo on how it works, please see my seperate repo on this 
+
+### Modelling Results
+
+
+
 
 ## Odds Comparison
 
 ## Further Analysis
 
+###Principal Component Analysis
 
-Over the last 
-My capstone project from the General Assembly immersive program. Here I predicted outcomes of tennis matches. I extracted the data using SQL and created symmetrical models using logistic regression, gradient boosters and neural nets. Using AWS infrastructure, I tuned the final model to beat the bookmakers. 
+
+
+
+
 
