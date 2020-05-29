@@ -6,8 +6,8 @@ In this project I use data from 30 years of tennis and around 75,000 professiona
 
 ## Goals
 My goals for this project were:
-- Gather usable data for Tennis matches, players and bookmaker odds
-- Clean and analyse the data, making sure that it is reliable and workable
+- Gather usable data for Tennis matches, players and bookmaker odds.
+- Clean and analyse the data, making sure that it is reliable and workable.
 - Feature Creation - use the data to create features which will feed and improve the model.
 - Train Machine Learning models, evaluate predictions and look at potential new features on the back of results. 
 - Prediction Goal Primary Objective - Beat ranking baseline - create a model that will be able to predict the outcome of a tennis match better than just choosing the highest ranked player.
